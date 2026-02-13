@@ -15,7 +15,7 @@ Node.js/Express backend API with PostgreSQL for the collaborative shopping list 
 ## Prerequisites
 
 - Node.js 18+ and npm
-- PostgreSQL 12+
+- PostgreSQL 12+ (local) **OR** cloud-hosted PostgreSQL (Supabase, Neon, AWS RDS, etc.)
 
 ## Setup Instructions
 
@@ -27,6 +27,8 @@ npm install
 ```
 
 ### 2. Setup PostgreSQL Database
+
+**Option A: Local PostgreSQL**
 
 Create a new PostgreSQL database:
 
@@ -40,6 +42,22 @@ CREATE DATABASE shopping_list;
 # Exit psql
 \q
 ```
+
+**Option B: Cloud-Hosted PostgreSQL (Recommended)**
+
+Use a cloud database provider for easier setup and production deployment:
+
+- **[Supabase](https://supabase.com)** - Free tier, easy setup, includes auth & storage
+- **[Neon](https://neon.tech)** - Serverless PostgreSQL, generous free tier
+- **[AWS RDS](https://aws.amazon.com/rds/)** - Enterprise-grade, scalable
+- **[Heroku Postgres](https://www.heroku.com/postgres)** - Simple, integrated with Heroku
+
+**Cloud setup steps:**
+1. Create account with your chosen provider
+2. Create a new PostgreSQL database/project
+3. Copy the connection string provided by the platform
+4. Whitelist your IP address (if required)
+5. Use the connection string in your `.env` file (Step 4 below)
 
 ### 3. Run Database Migrations
 
@@ -67,6 +85,8 @@ cp .env.example .env
 
 Edit `.env`:
 
+**For local PostgreSQL:**
+
 ```env
 PORT=3000
 NODE_ENV=development
@@ -77,6 +97,8 @@ DB_PORT=5432
 DB_NAME=shopping_list
 DB_USER=postgres
 DB_PASSWORD=your_password
+DB_SSL_ENABLED=false
+DB_SSL_REJECT_UNAUTHORIZED=false
 
 # Generate secure random strings for production (at least 32 characters)
 JWT_SECRET=your_super_secret_jwt_key_change_in_production_min_32_chars
@@ -87,6 +109,37 @@ JWT_REFRESH_EXPIRATION=7d
 # Comma-separated list of allowed origins
 ALLOWED_ORIGINS=http://localhost:19000,exp://localhost:19000
 ```
+
+**For cloud-hosted PostgreSQL:**
+
+```env
+PORT=3000
+NODE_ENV=development
+
+# Use the connection string from your cloud provider
+DATABASE_URL=postgresql://user:password@db.provider.com:5432/shopping_list
+DB_HOST=db.provider.com
+DB_PORT=5432
+DB_NAME=shopping_list
+DB_USER=your_username
+DB_PASSWORD=your_cloud_password
+DB_SSL_ENABLED=true
+DB_SSL_REJECT_UNAUTHORIZED=false
+
+# Generate secure random strings for production (at least 32 characters)
+JWT_SECRET=your_super_secret_jwt_key_change_in_production_min_32_chars
+JWT_REFRESH_SECRET=your_refresh_secret_key_also_change_this_min_32_chars
+JWT_EXPIRATION=15m
+JWT_REFRESH_EXPIRATION=7d
+
+# Comma-separated list of allowed origins
+ALLOWED_ORIGINS=http://localhost:19000,exp://localhost:19000
+```
+
+**SSL Configuration:**
+- `DB_SSL_ENABLED=true` - Required for most cloud providers (Supabase, Neon, AWS RDS, etc.)
+- `DB_SSL_REJECT_UNAUTHORIZED=false` - Set to false for cloud providers using self-signed certificates
+- See `.env.example` for provider-specific connection string examples
 
 ### 5. Start the Server
 
@@ -227,13 +280,38 @@ curl -X POST http://localhost:3000/api/lists \
 ## Troubleshooting
 
 **Database connection error:**
-- Ensure PostgreSQL is running
+
+*For local PostgreSQL:*
+- Ensure PostgreSQL is running: `brew services list` (Mac) or check Windows Services
 - Verify DATABASE_URL in `.env` is correct
 - Check database exists: `psql -U postgres -l`
+- Ensure `DB_SSL_ENABLED=false` for local databases
+
+*For cloud-hosted PostgreSQL:*
+- Verify your IP address is whitelisted in the provider's dashboard
+- Ensure `DB_SSL_ENABLED=true` is set in `.env`
+- Check that credentials (host, port, username, password) are correct
+- Test connection: `psql "postgresql://user:pass@host:port/dbname"`
+- Verify the database instance is running in your cloud provider's console
+
+**SSL connection required error:**
+- Set `DB_SSL_ENABLED=true` in `.env` (required for cloud databases)
+- Set `DB_SSL_REJECT_UNAUTHORIZED=false` for most cloud providers
+- Verify your cloud provider requires SSL connections
+
+**Connection timeout:**
+- Check IP whitelisting/firewall settings in cloud provider
+- Verify hostname and port are correct
+- Ensure database instance is running
 
 **Port already in use:**
-- Change PORT in `.env` to a different port
+- Change PORT in `.env` to a different port (e.g., 3001)
 - Or kill the process using port 3000
 
 **JWT errors:**
 - Ensure JWT_SECRET and JWT_REFRESH_SECRET are set and at least 32 characters in production
+
+**Migration errors:**
+- Ensure database connection works before running migrations
+- For cloud databases, verify SSL settings are correct
+- Try running migrations manually: `psql "your-connection-string" -f migrations/001_initial_schema.sql`

@@ -13,6 +13,8 @@ interface EnvConfig {
   DB_NAME: string;
   DB_USER: string;
   DB_PASSWORD: string;
+  DB_SSL_ENABLED: boolean;
+  DB_SSL_REJECT_UNAUTHORIZED: boolean;
   JWT_SECRET: string;
   JWT_REFRESH_SECRET: string;
   JWT_EXPIRATION: string;
@@ -37,6 +39,8 @@ export const env: EnvConfig = {
   DB_NAME: getEnvVariable('DB_NAME', 'shopping_list'),
   DB_USER: getEnvVariable('DB_USER', 'postgres'),
   DB_PASSWORD: getEnvVariable('DB_PASSWORD'),
+  DB_SSL_ENABLED: getEnvVariable('DB_SSL_ENABLED', 'false') === 'true',
+  DB_SSL_REJECT_UNAUTHORIZED: getEnvVariable('DB_SSL_REJECT_UNAUTHORIZED', 'false') === 'true',
   JWT_SECRET: getEnvVariable('JWT_SECRET'),
   JWT_REFRESH_SECRET: getEnvVariable('JWT_REFRESH_SECRET'),
   JWT_EXPIRATION: getEnvVariable('JWT_EXPIRATION', '15m'),

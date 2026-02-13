@@ -22,6 +22,10 @@ const dbConfig = {
   max: 30, // Maximum pool size
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
+  // SSL configuration for cloud-hosted databases
+  ssl: env.DB_SSL_ENABLED ? {
+    rejectUnauthorized: env.DB_SSL_REJECT_UNAUTHORIZED,
+  } : false,
 };
 
 // Create database instance
