@@ -93,7 +93,9 @@ The following components need to be implemented:
 ### Prerequisites
 
 - Node.js 18+ and npm
-- PostgreSQL 12+
+- **Database**: Neon PostgreSQL (cloud-hosted, already configured)
+  - *Note: No local PostgreSQL installation required*
+  - *Alternative: You can use local PostgreSQL 12+ or other cloud providers (see backend README)*
 - For mobile development:
   - Android Studio (for Android emulator)
   - Expo Go app (for physical device testing)
@@ -107,23 +109,21 @@ cd backend
 # Install dependencies
 npm install
 
-# Setup PostgreSQL database
-createdb shopping_list
-
 # Configure environment variables
 cp .env.example .env
 # Edit .env with your database credentials and JWT secrets
+# (The .env file is already configured with Neon database connection)
 
 # Run database migrations
 npm run migrate
-# OR manually:
-psql -U postgres -d shopping_list -f migrations/001_initial_schema.sql
 
 # Start backend server
 npm run dev
 ```
 
 Backend will run on `http://localhost:3000`
+
+**Database**: This project is configured to use **Neon PostgreSQL** (cloud-hosted). The database connection is already configured in `.env`. If you need to use a different database or set up from scratch, see [backend/README.md](backend/README.md) for detailed setup options.
 
 See [backend/README.md](backend/README.md) for detailed backend setup and API documentation.
 

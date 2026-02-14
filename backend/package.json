@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "jest --coverage",
-    "migrate": "psql $DATABASE_URL -f migrations/001_initial_schema.sql"
+    "migrate": "node scripts/migrate.js",
+    "migrate:psql": "psql $DATABASE_URL -f migrations/001_initial_schema.sql"
   },
   "keywords": ["shopping-list", "api", "express", "postgresql"],
   "author": "",

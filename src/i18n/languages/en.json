@@ -38,11 +38,22 @@
     "confirmDelete": "Are you sure you want to delete this list?",
     "cancel": "Cancel",
     "delete": "Delete",
-    "create": "Create"
+    "create": "Create",
+    "selectAction": "Select an action",
+    "editName": "Edit Name",
+    "share": "Share",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "viewOnly": "You have view-only access",
+    "showArchived": "Archived",
+    "hideArchived": "Active",
+    "editor": "Editor",
+    "viewer": "Viewer"
   },
   "items": {
     "addItem": "Add item...",
     "itemName": "Item name",
+    "name": "Item name",
     "quantity": "Quantity",
     "notes": "Notes",
     "optional": "Optional",
@@ -56,7 +67,12 @@
     "saveItem": "Save",
     "showCompleted": "Show completed",
     "hideCompleted": "Hide completed",
-    "completedItems": "{{count}} completed"
+    "completedItems": "{{count}} completed",
+    "selectAction": "Select an action",
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "confirmClearCompleted": "Clear all completed items?",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "members": {
     "shareList": "Share List",
@@ -75,7 +91,9 @@
     "leaveList": "Leave List",
     "confirmLeave": "Are you sure you want to leave this list?",
     "leave": "Leave",
-    "add": "Add"
+    "add": "Add",
+    "confirmRemove": "Remove this member from the list?",
+    "changeRole": "Change Role"
   },
   "settings": {
     "settings": "Settings",
@@ -94,7 +112,11 @@
     "about": "About",
     "version": "Version",
     "logout": "Log Out",
-    "confirmLogout": "Are you sure you want to log out?"
+    "confirmLogout": "Are you sure you want to log out?",
+    "security": "Security",
+    "profileUpdated": "Profile updated successfully",
+    "passwordChanged": "Password changed successfully",
+    "editProfile": "Edit Profile"
   },
   "common": {
     "save": "Save",
@@ -113,7 +135,9 @@
     "done": "Done",
     "back": "Back",
     "close": "Close",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "change": "Change",
+    "clear": "Clear"
   },
   "errors": {
     "networkError": "Network error. Please check your connection.",
