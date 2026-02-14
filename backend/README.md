@@ -43,47 +43,96 @@ CREATE DATABASE shopping_list;
 \q
 ```
 
-**Option B: Cloud-Hosted PostgreSQL (Recommended)**
+**Option B: Cloud-Hosted PostgreSQL (✅ Current Setup)**
 
-Use a cloud database provider for easier setup and production deployment:
+This project is **already configured** with **Neon PostgreSQL**. The `.env` file contains the connection details.
 
+If you need to set up a different cloud database provider, here are the options:
+
+- **[Neon](https://neon.tech)** - ✅ Currently configured, serverless PostgreSQL, generous free tier
 - **[Supabase](https://supabase.com)** - Free tier, easy setup, includes auth & storage
-- **[Neon](https://neon.tech)** - Serverless PostgreSQL, generous free tier
 - **[AWS RDS](https://aws.amazon.com/rds/)** - Enterprise-grade, scalable
 - **[Heroku Postgres](https://www.heroku.com/postgres)** - Simple, integrated with Heroku
 
-**Cloud setup steps:**
+**Current Neon Configuration:**
+- Database: `neondb`
+- Host: `ep-delicate-king-agdvvb67-pooler.c-2.eu-central-1.aws.neon.tech`
+- SSL: Required with channel binding
+- Connection string is already set in `.env`
+
+**To use a different cloud provider:**
 1. Create account with your chosen provider
 2. Create a new PostgreSQL database/project
 3. Copy the connection string provided by the platform
 4. Whitelist your IP address (if required)
-5. Use the connection string in your `.env` file (Step 4 below)
+5. Update the connection string in your `.env` file (Step 4 below)
 
 ### 3. Run Database Migrations
 
-```bash
-# Set DATABASE_URL environment variable (or use values from .env)
-export DATABASE_URL="postgresql://postgres:password@localhost:5432/shopping_list"
+**Recommended: Using Node.js script (cross-platform):**
 
-# Run migrations
+```bash
+# Works on Windows, Mac, Linux - uses DATABASE_URL from .env
 npm run migrate
 ```
 
-Or manually run the migration file:
+This will automatically:
+- Connect to your database using settings from `.env`
+- Run the schema migration
+- Create all necessary tables
+- Handle SSL configuration automatically
 
+**Alternative: Using psql directly (requires PostgreSQL client):**
+
+For Neon:
+```bash
+npm run migrate:psql
+# Or manually:
+psql "postgresql://neondb_owner:npg_s3y0jkSchUXD@ep-delicate-king-agdvvb67-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require" -f migrations/001_initial_schema.sql
+```
+
+For local PostgreSQL:
 ```bash
 psql -U postgres -d shopping_list -f migrations/001_initial_schema.sql
 ```
 
 ### 4. Configure Environment Variables
 
-Copy `.env.example` to `.env` and update with your values:
+**✅ Already Configured**: The `.env` file is already set up with Neon database credentials.
+
+If you need to reconfigure or use a different database:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
+Then edit `.env`:
+
+**For Neon PostgreSQL (Current Setup):**
+
+```env
+PORT=3000
+NODE_ENV=development
+
+# Neon PostgreSQL Connection
+DATABASE_URL=postgresql://neondb_owner:npg_s3y0jkSchUXD@ep-delicate-king-agdvvb67-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+DB_HOST=ep-delicate-king-agdvvb67-pooler.c-2.eu-central-1.aws.neon.tech
+DB_PORT=5432
+DB_NAME=neondb
+DB_USER=neondb_owner
+DB_PASSWORD=npg_s3y0jkSchUXD
+DB_SSL_ENABLED=true
+DB_SSL_REJECT_UNAUTHORIZED=false
+
+# Generate secure random strings for production (at least 32 characters)
+JWT_SECRET=your_super_secret_jwt_key_change_in_production_min_32_chars
+JWT_REFRESH_SECRET=your_refresh_secret_key_also_change_this_min_32_chars
+JWT_EXPIRATION=15m
+JWT_REFRESH_EXPIRATION=7d
+
+# Comma-separated list of allowed origins
+ALLOWED_ORIGINS=http://localhost:19000,exp://localhost:19000
+```
 
 **For local PostgreSQL:**
 

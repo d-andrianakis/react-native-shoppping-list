@@ -38,11 +38,22 @@
     "confirmDelete": "Möchten Sie diese Liste wirklich löschen?",
     "cancel": "Abbrechen",
     "delete": "Löschen",
-    "create": "Erstellen"
+    "create": "Erstellen",
+    "selectAction": "Aktion auswählen",
+    "editName": "Name bearbeiten",
+    "share": "Teilen",
+    "archive": "Archivieren",
+    "unarchive": "Aus Archiv holen",
+    "viewOnly": "Sie haben nur Lesezugriff",
+    "showArchived": "Archiviert",
+    "hideArchived": "Aktiv",
+    "editor": "Bearbeiter",
+    "viewer": "Betrachter"
   },
   "items": {
     "addItem": "Artikel hinzufügen...",
     "itemName": "Artikelname",
+    "name": "Artikelname",
     "quantity": "Menge",
     "notes": "Notizen",
     "optional": "Optional",
@@ -56,7 +67,12 @@
     "saveItem": "Speichern",
     "showCompleted": "Erledigte anzeigen",
     "hideCompleted": "Erledigte ausblenden",
-    "completedItems": "{{count}} erledigt"
+    "completedItems": "{{count}} erledigt",
+    "selectAction": "Aktion auswählen",
+    "confirmDelete": "Möchten Sie diesen Artikel wirklich löschen?",
+    "confirmClearCompleted": "Alle erledigten Artikel löschen?",
+    "edit": "Bearbeiten",
+    "delete": "Löschen"
   },
   "members": {
     "shareList": "Liste teilen",
@@ -75,7 +91,9 @@
     "leaveList": "Liste verlassen",
     "confirmLeave": "Möchten Sie diese Liste wirklich verlassen?",
     "leave": "Verlassen",
-    "add": "Hinzufügen"
+    "add": "Hinzufügen",
+    "confirmRemove": "Dieses Mitglied aus der Liste entfernen?",
+    "changeRole": "Rolle ändern"
   },
   "settings": {
     "settings": "Einstellungen",
@@ -94,7 +112,11 @@
     "about": "Über",
     "version": "Version",
     "logout": "Abmelden",
-    "confirmLogout": "Möchten Sie sich wirklich abmelden?"
+    "confirmLogout": "Möchten Sie sich wirklich abmelden?",
+    "security": "Sicherheit",
+    "profileUpdated": "Profil erfolgreich aktualisiert",
+    "passwordChanged": "Passwort erfolgreich geändert",
+    "editProfile": "Profil bearbeiten"
   },
   "common": {
     "save": "Speichern",
@@ -113,7 +135,9 @@
     "done": "Fertig",
     "back": "Zurück",
     "close": "Schließen",
-    "refresh": "Aktualisieren"
+    "refresh": "Aktualisieren",
+    "change": "Ändern",
+    "clear": "Löschen"
   },
   "errors": {
     "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung.",
