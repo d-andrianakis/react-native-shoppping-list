@@ -2,7 +2,20 @@
   "permissions": {
     "allow": [
       "Bash(test:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(npx expo uninstall:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npx expo install:*)",
+      "Bash(npm install:*)",
+      "Bash(npm ls:*)",
+      "Bash(npx tsc:*)",
+      "Bash(cd:*)",
+      "Bash(npx react-native:*)",
+      "Bash(npx expo start:*)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(node -e:*)"
     ]
   }
 }

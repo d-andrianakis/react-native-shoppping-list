@@ -1,12 +1,12 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ENV from '../../config/env';
 import { store } from '../../store';
 import { updateTokens, logout } from '../../store/slices/authSlice';
 
-const SECURE_STORE_KEYS = {
-  ACCESS_TOKEN: 'accessToken',
-  REFRESH_TOKEN: 'refreshToken',
+const STORAGE_KEYS = {
+  ACCESS_TOKEN: '@shopping_list:accessToken',
+  REFRESH_TOKEN: '@shopping_list:refreshToken',
 };
 
 // Create axios instance
@@ -50,8 +50,7 @@ apiClient.interceptors.response.use(
         if (!refreshToken) {
           // No refresh token, logout user
           store.dispatch(logout());
-          await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
-          await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN);
+          await AsyncStorage.multiRemove([STORAGE_KEYS.ACCESS_TOKEN, STORAGE_KEYS.REFRESH_TOKEN]);
           return Promise.reject(error);
         }
 
@@ -62,10 +61,10 @@ apiClient.interceptors.response.use(
 
         const { accessToken, refreshToken: newRefreshToken } = response.data.data;
 
-        // Update tokens in store and secure storage
+        // Update tokens in store and storage
         store.dispatch(updateTokens({ accessToken, refreshToken: newRefreshToken }));
-        await SecureStore.setItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN, accessToken);
-        await SecureStore.setItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN, newRefreshToken);
+        await AsyncStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+        await AsyncStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken);
 
         // Retry original request with new token
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
@@ -73,8 +72,7 @@ apiClient.interceptors.response.use(
       } catch (refreshError) {
         // Refresh failed, logout user
         store.dispatch(logout());
-        await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
-        await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN);
+        await AsyncStorage.multiRemove([STORAGE_KEYS.ACCESS_TOKEN, STORAGE_KEYS.REFRESH_TOKEN]);
         return Promise.reject(refreshError);
       }
     }
@@ -85,19 +83,18 @@ apiClient.interceptors.response.use(
 
 // Helper functions for token management
 export const saveTokens = async (accessToken: string, refreshToken: string) => {
-  await SecureStore.setItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN, accessToken);
-  await SecureStore.setItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN, refreshToken);
+  await AsyncStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+  await AsyncStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
 };
 
 export const getStoredTokens = async () => {
-  const accessToken = await SecureStore.getItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
-  const refreshToken = await SecureStore.getItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN);
+  const accessToken = await AsyncStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+  const refreshToken = await AsyncStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
   return { accessToken, refreshToken };
 };
 
 export const clearStoredTokens = async () => {
-  await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.ACCESS_TOKEN);
-  await SecureStore.deleteItemAsync(SECURE_STORE_KEYS.REFRESH_TOKEN);
+  await AsyncStorage.multiRemove([STORAGE_KEYS.ACCESS_TOKEN, STORAGE_KEYS.REFRESH_TOKEN]);
 };
 
 export default apiClient;

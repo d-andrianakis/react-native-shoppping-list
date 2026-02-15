@@ -15,8 +15,9 @@ const resources = {
   de: { translation: de },
 };
 
-// Get device language
-const deviceLanguage = Localization.locale.split('-')[0];
+// Get device language (Expo SDK 50+ uses getLocales() instead of deprecated .locale)
+const locales = Localization.getLocales();
+const deviceLanguage = locales?.[0]?.languageCode ?? 'en';
 const supportedLanguages = ['en', 'el', 'de'];
 const defaultLanguage = supportedLanguages.includes(deviceLanguage) ? deviceLanguage : 'en';
 

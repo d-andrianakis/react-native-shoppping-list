@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 
 const ENV = {
   dev: {
-    API_BASE_URL: 'http://localhost:3000/api',
+    API_BASE_URL: 'http://10.0.2.2:3000/api',
   },
   staging: {
     API_BASE_URL: 'https://staging-api.example.com/api',
