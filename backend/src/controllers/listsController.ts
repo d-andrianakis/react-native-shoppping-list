@@ -1,6 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import * as listService from '../services/listService';
+import { emitToList, emitToUser } from '../socket/emitter';
 
 /**
  * Get all lists for authenticated user
@@ -74,6 +75,8 @@ export const createList = async (
       success: true,
       data: list,
     });
+
+    emitToUser(req.user.userId, 'list:created', { list, userId: req.user.userId });
   } catch (error) {
     next(error);
   }
@@ -105,6 +108,8 @@ export const updateList = async (
       success: true,
       data: list,
     });
+
+    emitToList(id, 'list:updated', { list, userId: req.user.userId });
   } catch (error) {
     next(error);
   }
@@ -125,6 +130,10 @@ export const deleteList = async (
     }
 
     const { id } = req.params;
+
+    // Emit before delete so the room still exists
+    emitToList(id, 'list:deleted', { listId: id, userId: req.user.userId });
+
     await listService.deleteList(req.user.userId, id);
 
     res.status(200).json({
@@ -159,6 +168,8 @@ export const archiveList = async (
       success: true,
       data: list,
     });
+
+    emitToList(id, 'list:archived', { list, userId: req.user.userId });
   } catch (error) {
     next(error);
   }

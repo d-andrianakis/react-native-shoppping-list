@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import { createServer } from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -6,6 +7,7 @@ import { env } from './config/env';
 import { testConnection, closeDatabase } from './config/database';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { apiRateLimiter } from './middleware/rateLimit';
+import { initializeSocket, getIO } from './socket';
 
 // Import routes
 import authRoutes from './routes/auth.routes';
@@ -15,6 +17,7 @@ import membersRoutes from './routes/members.routes';
 import suggestionsRoutes from './routes/suggestions.routes';
 
 const app: Application = express();
+const httpServer = createServer(app);
 
 // Security middleware
 app.use(helmet());
@@ -74,8 +77,11 @@ const startServer = async () => {
       process.exit(1);
     }
 
+    // Initialize Socket.io
+    initializeSocket(httpServer);
+
     // Start listening
-    app.listen(env.PORT, () => {
+    httpServer.listen(env.PORT, () => {
       console.log(`
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
@@ -109,12 +115,14 @@ const startServer = async () => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('\n🛑 SIGTERM received. Shutting down gracefully...');
+  try { getIO().close(); } catch (_) {}
   await closeDatabase();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   console.log('\n🛑 SIGINT received. Shutting down gracefully...');
+  try { getIO().close(); } catch (_) {}
   await closeDatabase();
   process.exit(0);
 });

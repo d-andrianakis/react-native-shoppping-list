@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, TouchableOpacity, StyleSheet, Alert, Modal } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useFocusEffect } from '@react-navigation/native';
 import Animated, { FadeOut } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -77,17 +76,6 @@ const ListDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       ),
     });
   }, [listId, checkedItemsCount, showChecked, isReadOnly]);
-
-  // Real-time polling when screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      const interval = setInterval(() => {
-        loadItems(); // Poll every 10 seconds
-      }, 10000);
-
-      return () => clearInterval(interval);
-    }, [listId])
-  );
 
   const loadItems = async () => {
     dispatch(fetchItemsStart());

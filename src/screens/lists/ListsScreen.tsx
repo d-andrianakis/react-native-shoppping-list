@@ -11,7 +11,6 @@ import {
   Alert,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList, ShoppingList } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../store';
@@ -64,17 +63,6 @@ const ListsScreen: React.FC<Props> = ({ navigation }) => {
       ),
     });
   }, [navigation, showArchived]);
-
-  // Real-time polling when screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      const interval = setInterval(() => {
-        loadLists(); // Poll every 15 seconds
-      }, 15000);
-
-      return () => clearInterval(interval);
-    }, [])
-  );
 
   const loadLists = async () => {
     dispatch(fetchListsStart());

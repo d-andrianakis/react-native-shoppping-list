@@ -1,6 +1,8 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import * as memberService from '../services/memberService';
+import { emitToList, emitToUser } from '../socket/emitter';
+import { getIO } from '../socket';
 
 /**
  * Get all members of a list
@@ -56,6 +58,17 @@ export const addMember = async (
       success: true,
       data: member,
     });
+
+    emitToList(listId, 'member:added', { listId, member, userId: req.user.userId });
+    emitToUser(member.userId, 'member:added', { listId, member, userId: req.user.userId });
+
+    // Join the new member's socket(s) to the list room
+    try {
+      const sockets = await getIO().in(`user:${member.userId}`).fetchSockets();
+      for (const s of sockets) {
+        s.join(`list:${listId}`);
+      }
+    } catch (_) {}
   } catch (error) {
     next(error);
   }
@@ -82,6 +95,17 @@ export const removeMember = async (
       success: true,
       message: 'Member removed successfully',
     });
+
+    emitToList(listId, 'member:removed', { listId, removedUserId: memberId, userId: req.user.userId });
+    emitToUser(memberId, 'member:removed', { listId, removedUserId: memberId, userId: req.user.userId });
+
+    // Remove the member's socket(s) from the list room
+    try {
+      const sockets = await getIO().in(`user:${memberId}`).fetchSockets();
+      for (const s of sockets) {
+        s.leave(`list:${listId}`);
+      }
+    } catch (_) {}
   } catch (error) {
     next(error);
   }
@@ -115,6 +139,8 @@ export const updateMemberRole = async (
       success: true,
       data: member,
     });
+
+    emitToList(listId, 'member:updated', { listId, member, userId: req.user.userId });
   } catch (error) {
     next(error);
   }
@@ -141,6 +167,16 @@ export const leaveList = async (
       success: true,
       message: 'Left list successfully',
     });
+
+    emitToList(listId, 'member:left', { listId, leftUserId: req.user.userId });
+
+    // Remove the leaving user's socket(s) from the list room
+    try {
+      const sockets = await getIO().in(`user:${req.user.userId}`).fetchSockets();
+      for (const s of sockets) {
+        s.leave(`list:${listId}`);
+      }
+    } catch (_) {}
   } catch (error) {
     next(error);
   }

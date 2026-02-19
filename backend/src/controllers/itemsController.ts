@@ -1,6 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import * as itemService from '../services/itemService';
+import { emitToList } from '../socket/emitter';
 
 /**
  * Get all items in a list
@@ -55,6 +56,8 @@ export const addItem = async (
       success: true,
       data: item,
     });
+
+    emitToList(listId, 'item:added', { listId, item, userId: req.user.userId });
   } catch (error) {
     next(error);
   }
@@ -88,6 +91,8 @@ export const updateItem = async (
       success: true,
       data: item,
     });
+
+    emitToList(listId, 'item:updated', { listId, item, userId: req.user.userId });
   } catch (error) {
     next(error);
   }
@@ -114,6 +119,8 @@ export const deleteItem = async (
       success: true,
       message: 'Item deleted successfully',
     });
+
+    emitToList(listId, 'item:deleted', { listId, itemId, userId: req.user.userId });
   } catch (error) {
     next(error);
   }
@@ -140,6 +147,8 @@ export const toggleCheck = async (
       success: true,
       data: item,
     });
+
+    emitToList(listId, 'item:checked', { listId, item, userId: req.user.userId });
   } catch (error) {
     next(error);
   }
@@ -166,6 +175,8 @@ export const clearChecked = async (
       success: true,
       data: result,
     });
+
+    emitToList(listId, 'items:cleared', { listId, userId: req.user.userId });
   } catch (error) {
     next(error);
   }
@@ -197,10 +208,15 @@ export const reorderItems = async (
 
     await itemService.reorderItems(req.user.userId, listId, itemOrders);
 
+    // Fetch updated items to include in the event payload
+    const updatedItems = await itemService.getListItems(req.user.userId, listId);
+
     res.status(200).json({
       success: true,
       message: 'Items reordered successfully',
     });
+
+    emitToList(listId, 'items:reordered', { listId, items: updatedItems, userId: req.user.userId });
   } catch (error) {
     next(error);
   }

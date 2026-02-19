@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ENV from '../../config/env';
 import { store } from '../../store';
 import { updateTokens, logout } from '../../store/slices/authSlice';
+import { socketService } from '../socket';
 
 const STORAGE_KEYS = {
   ACCESS_TOKEN: '@shopping_list:accessToken',
@@ -65,6 +66,9 @@ apiClient.interceptors.response.use(
         store.dispatch(updateTokens({ accessToken, refreshToken: newRefreshToken }));
         await AsyncStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
         await AsyncStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken);
+
+        // Reconnect socket with new token
+        socketService.reconnectWithToken(accessToken);
 
         // Retry original request with new token
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
