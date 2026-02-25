@@ -19,6 +19,9 @@ import suggestionsRoutes from './routes/suggestions.routes';
 const app: Application = express();
 const httpServer = createServer(app);
 
+// Trust proxy (Coolify/Traefik sits in front)
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 app.use(cors({
