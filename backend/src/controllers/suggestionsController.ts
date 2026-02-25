@@ -13,17 +13,19 @@ export const getSuggestions = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { q } = req.query;
     const limit = parseInt(req.query.limit as string) || 5;
 
     if (!q || typeof q !== 'string') {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Query parameter "q" is required',
       });
+      return;
     }
 
     const suggestions = await suggestionService.getSuggestions(
@@ -52,7 +54,8 @@ export const getCommonItems = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const limit = parseInt(req.query.limit as string) || 20;
@@ -78,7 +81,8 @@ export const getSuggestionsByCategory = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { category } = req.params;

@@ -15,7 +15,8 @@ export const getMembers = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId } = req.params;
@@ -41,7 +42,8 @@ export const addMember = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId } = req.params;
@@ -85,7 +87,8 @@ export const removeMember = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId, userId: memberId } = req.params;
@@ -122,7 +125,8 @@ export const updateMemberRole = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId, userId: memberId } = req.params;
@@ -157,7 +161,8 @@ export const leaveList = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId } = req.params;

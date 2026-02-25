@@ -66,10 +66,11 @@ export const refresh = async (
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Refresh token is required',
       });
+      return;
     }
 
     const tokens = await authService.refreshAccessToken(refreshToken);
@@ -94,10 +95,11 @@ export const getProfile = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: 'Unauthorized',
       });
+      return;
     }
 
     const profile = await authService.getUserProfile(req.user.userId);
@@ -122,10 +124,11 @@ export const updateProfile = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: 'Unauthorized',
       });
+      return;
     }
 
     const { displayName, preferredLanguage } = req.body;
@@ -155,19 +158,21 @@ export const changePassword = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: 'Unauthorized',
       });
+      return;
     }
 
     const { currentPassword, newPassword } = req.body;
 
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Current password and new password are required',
       });
+      return;
     }
 
     await authService.changePassword(req.user.userId, currentPassword, newPassword);

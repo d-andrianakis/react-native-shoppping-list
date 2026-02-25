@@ -14,7 +14,8 @@ export const getItems = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId } = req.params;
@@ -40,7 +41,8 @@ export const addItem = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId } = req.params;
@@ -74,7 +76,8 @@ export const updateItem = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId, itemId } = req.params;
@@ -109,7 +112,8 @@ export const deleteItem = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId, itemId } = req.params;
@@ -137,7 +141,8 @@ export const toggleCheck = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId, itemId } = req.params;
@@ -165,7 +170,8 @@ export const clearChecked = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId } = req.params;
@@ -193,17 +199,19 @@ export const reorderItems = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { listId } = req.params;
     const { itemOrders } = req.body;
 
     if (!Array.isArray(itemOrders)) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'itemOrders must be an array',
       });
+      return;
     }
 
     await itemService.reorderItems(req.user.userId, listId, itemOrders);

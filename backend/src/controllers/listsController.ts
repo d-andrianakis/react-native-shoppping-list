@@ -14,7 +14,8 @@ export const getLists = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const lists = await listService.getUserLists(req.user.userId);
@@ -39,7 +40,8 @@ export const getListById = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { id } = req.params;
@@ -65,7 +67,8 @@ export const createList = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { name } = req.body;
@@ -93,7 +96,8 @@ export const updateList = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { id } = req.params;
@@ -126,7 +130,8 @@ export const deleteList = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { id } = req.params;
@@ -156,7 +161,8 @@ export const archiveList = async (
 ): Promise<void> => {
   try {
     if (!req.user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json({ success: false, error: 'Unauthorized' });
+      return;
     }
 
     const { id } = req.params;
