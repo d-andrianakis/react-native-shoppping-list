@@ -2,13 +2,13 @@ import Constants from 'expo-constants';
 
 const ENV = {
   dev: {
-    API_BASE_URL: 'http://10.0.2.2:3000/api',
+    API_BASE_URL: 'https://shopping-list.dandrianakis.site/api',
   },
   staging: {
-    API_BASE_URL: 'https://staging-api.example.com/api',
+    API_BASE_URL: 'https://shopping-list.dandrianakis.site/api',
   },
   prod: {
-    API_BASE_URL: 'https://api.example.com/api',
+    API_BASE_URL: 'https://shopping-list.dandrianakis.site/api',
   },
 };
 
