@@ -193,7 +193,7 @@ export const toggleItemCheck = async (
      SET
        is_checked = NOT is_checked,
        checked_at = CASE WHEN NOT is_checked THEN NOW() ELSE NULL END,
-       checked_by = CASE WHEN NOT is_checked THEN $1 ELSE NULL END
+       checked_by = CASE WHEN NOT is_checked THEN $1::uuid ELSE NULL END
      WHERE id = $2 AND list_id = $3
      RETURNING *`,
     [userId, itemId, listId]
