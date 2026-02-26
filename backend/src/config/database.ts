@@ -13,20 +13,30 @@ const pgp = pgPromise({
 });
 
 // Database connection configuration
-const dbConfig = {
-  host: env.DB_HOST,
-  port: env.DB_PORT,
-  database: env.DB_NAME,
-  user: env.DB_USER,
-  password: env.DB_PASSWORD,
-  max: 30, // Maximum pool size
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-  // SSL configuration for cloud-hosted databases
-  ssl: env.DB_SSL_ENABLED ? {
-    rejectUnauthorized: env.DB_SSL_REJECT_UNAUTHORIZED,
-  } : false,
-};
+// Prefer DATABASE_URL if available, otherwise fall back to individual fields
+const dbConfig = env.DATABASE_URL
+  ? {
+      connectionString: env.DATABASE_URL,
+      max: 30,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 2000,
+      ssl: env.DB_SSL_ENABLED ? {
+        rejectUnauthorized: env.DB_SSL_REJECT_UNAUTHORIZED,
+      } : false,
+    }
+  : {
+      host: env.DB_HOST,
+      port: env.DB_PORT,
+      database: env.DB_NAME,
+      user: env.DB_USER,
+      password: env.DB_PASSWORD,
+      max: 30,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 2000,
+      ssl: env.DB_SSL_ENABLED ? {
+        rejectUnauthorized: env.DB_SSL_REJECT_UNAUTHORIZED,
+      } : false,
+    };
 
 // Create database instance
 export const db = pgp(dbConfig);

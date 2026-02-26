@@ -33,7 +33,7 @@ const getEnvVariable = (key: string, defaultValue?: string): string => {
 export const env: EnvConfig = {
   PORT: parseInt(getEnvVariable('PORT', '3000'), 10),
   NODE_ENV: getEnvVariable('NODE_ENV', 'development'),
-  DATABASE_URL: getEnvVariable('DATABASE_URL'),
+  DATABASE_URL: process.env.DATABASE_URL || '',
   DB_HOST: getEnvVariable('DB_HOST', 'localhost'),
   DB_PORT: parseInt(getEnvVariable('DB_PORT', '5432'), 10),
   DB_NAME: getEnvVariable('DB_NAME', 'shopping_list'),
